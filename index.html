@@ -3998,7 +3998,7 @@
   }
 
   function toggleTheme() {
-    applyTheme((window._currentTheme || 'light') === 'light' ? 'dark' : 'light');
+    applyTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
   }
 
   (function() {
