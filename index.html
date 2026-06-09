@@ -12,15 +12,50 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      --radius: 12px;
+      --font-sans: 'Inter', -apple-system, sans-serif;
+    }
+
+    [data-theme="light"] {
       --bg: #F8F7F4;
       --bg-card: #EEEDEA;
       --text: #181818;
       --text-muted: #7A7A7A;
+      --text-subtle: #B0ADA8;
       --border: #E0DED9;
       --accent: #181818;
       --white: #FFFFFF;
-      --radius: 12px;
-      --font-sans: 'Inter', -apple-system, sans-serif;
+      --surface: #FFFFFF;
+      --nav-bg: rgba(248, 247, 244, 0.92);
+      --nav-mobile-bg: rgba(248, 247, 244, 0.97);
+      --surface-divider: #F0EFEC;
+      --meta-key-bg: #ebebeb;
+      --meta-key-color: #888888;
+      --role-tag-bg: #d6d6d6;
+      --role-tag-color: #666666;
+      --highlight-strong: #3D3D3D;
+      --placeholder-gradient: linear-gradient(160deg, #DEDBD5 0%, #C8C5BF 100%);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0B0B0B;
+      --bg-card: #181818;
+      --text: rgba(255,255,255,0.92);
+      --text-muted: rgba(255,255,255,0.72);
+      --text-subtle: rgba(255,255,255,0.55);
+      --border: rgba(255,255,255,0.08);
+      --accent: rgba(255,255,255,0.92);
+      --white: #111111;
+      --surface: #1E1E1E;
+      --nav-bg: rgba(11, 11, 11, 0.92);
+      --nav-mobile-bg: rgba(11, 11, 11, 0.97);
+      --surface-divider: rgba(255,255,255,0.05);
+      --meta-key-bg: #202020;
+      --meta-key-color: rgba(255,255,255,0.55);
+      --role-tag-bg: #202020;
+      --role-tag-color: rgba(255,255,255,0.72);
+      --highlight-strong: rgba(255,255,255,0.92);
+      --placeholder-gradient: linear-gradient(160deg, #222222 0%, #181818 100%);
     }
 
     html { scroll-behavior: smooth; font-size: 16px; }
@@ -46,7 +81,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(248, 247, 244, 0.92);
+      background: var(--nav-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
@@ -420,6 +455,14 @@
     }
 
     .project-card:hover { transform: scale(0.99); }
+
+    [data-theme="dark"] .project-card {
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+      transition: transform 0.35s cubic-bezier(.25,.46,.45,.94), box-shadow 0.25s ease;
+    }
+    [data-theme="dark"] .project-card:hover {
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14);
+    }
 
     .project-card img {
       width: 100%;
@@ -935,8 +978,8 @@
     .project-meta-key {
       display: inline-block;
       font-size: 0.75rem;
-      color: #888;
-      background: #ebebeb;
+      color: var(--meta-key-color);
+      background: var(--meta-key-bg);
       border-radius: 50px;
       padding: 4px 14px;
       margin-bottom: 8px;
@@ -1041,8 +1084,8 @@
     /* ─── Project Role Tag (playground style) ─── */
     .project-role-tag {
       display: inline-block;
-      background: #d6d6d6;
-      color: #666;
+      background: var(--role-tag-bg);
+      color: var(--role-tag-color);
       padding: 4px 14px;
       border-radius: 50px;
       font-size: 0.75rem;
@@ -1432,7 +1475,7 @@
       top: 60px;
       left: 0;
       right: 0;
-      background: rgba(248, 247, 244, 0.97);
+      background: var(--nav-mobile-bg);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
@@ -1578,7 +1621,50 @@
     .lang-btn .lang-sep { opacity: 0.35; margin: 0 2px; font-weight: 300; }
     .lang-btn .lang-active { font-weight: 700; color: var(--text); opacity: 1; }
     .lang-btn .lang-inactive { opacity: 0.4; font-weight: 400; }
+
+    /* ─── Theme Toggle ─── */
+    .theme-btn {
+      background: none;
+      border: none;
+      padding: 5px;
+      cursor: pointer;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .theme-btn:hover { color: var(--text); }
+    [data-theme="light"] .icon-sun { display: none; }
+    [data-theme="dark"]  .icon-moon { display: none; }
+
+    /* ─── Smooth Theme Transitions ─── */
+    body, nav, footer, .highlight-box, .badge-card,
+    .badge-slot, .badge-divider, .badge-photo-wrap,
+    .lightbox-content, .lightbox-close,
+    .nav-mobile-menu, .about-placeholder,
+    .project-meta-key, .project-role-tag, .hobby-chip,
+    .proto-filmstrip-btn, .project-img-placeholder,
+    .quiva-carousel, .quiva-carousel-btn,
+    .carousel-item-placeholder, section, .section,
+    .section-label, .project-role-box, .project-tag,
+    .playgrounds-section, #playgrounds,
+    .carousel-section, .about-carousel-inner {
+      transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease,
+        color 0.3s ease;
+    }
   </style>
+  <script>
+    (function(){
+      var t=localStorage.getItem('theme');
+      if(!t) t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+      document.documentElement.setAttribute('data-theme',t);
+    })();
+  </script>
 </head>
 <body>
 
@@ -1596,6 +1682,7 @@
       <li><a href="mailto:claratapparo21@gmail.com" class="nav-cta" data-i18n="nav.cta">Vamos conversar</a></li>
     </ul>
     <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
       <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
       <button class="nav-hamburger" id="navHamburger" onclick="toggleMobileMenu()" aria-label="Menu">
         <span></span><span></span><span></span>
@@ -1747,19 +1834,19 @@
         <div style="margin-bottom: 20px;">
           <p style="font-size: 1rem; font-weight: 600; color: var(--text); margin: 28px 0 16px;" data-i18n="about.subtitle2">Além do Design, fora das telas eu também curto muito:</p>
           <div style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: #f2f2f2; border-radius: 12px; padding: 10px 16px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card); border-radius: 12px; padding: 10px 16px;">
               <span style="font-size: 1.1rem;">⚽</span>
               <span style="font-size: 0.85rem; font-weight: 500; color: var(--text);" data-i18n="hobby.futvolei">Futvôlei</span>
             </div>
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: #f2f2f2; border-radius: 12px; padding: 10px 16px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card); border-radius: 12px; padding: 10px 16px;">
               <span style="font-size: 1.1rem;">🧘</span>
               <span style="font-size: 0.85rem; font-weight: 500; color: var(--text);">Yoga</span>
             </div>
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: #f2f2f2; border-radius: 12px; padding: 10px 16px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card); border-radius: 12px; padding: 10px 16px;">
               <span style="font-size: 1.1rem;">🇧🇷</span>
               <span style="font-size: 0.85rem; font-weight: 500; color: var(--text);" data-i18n="hobby.brazil">Brasilidades</span>
             </div>
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: #f2f2f2; border-radius: 12px; padding: 10px 16px;">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: var(--bg-card); border-radius: 12px; padding: 10px 16px;">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
               <span style="font-size: 0.85rem; font-weight: 500; color: var(--text);" data-i18n="hobby.reading">Leitura</span>
             </div>
@@ -1799,7 +1886,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page')" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -2093,7 +2183,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page')" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -2179,7 +2272,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page'); setTimeout(()=>document.getElementById('playgrounds').scrollIntoView({behavior:'smooth'}),100)" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -2415,7 +2511,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page'); setTimeout(()=>document.getElementById('playgrounds').scrollIntoView({behavior:'smooth'}),100)" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -2471,7 +2570,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page'); setTimeout(()=>document.getElementById('playgrounds').scrollIntoView({behavior:'smooth'}),100)" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -2528,7 +2630,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page'); setTimeout(()=>document.getElementById('playgrounds').scrollIntoView({behavior:'smooth'}),100)" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -2677,7 +2782,10 @@
 
 <nav>
     <span class="project-nav-back" onclick="showPage('main-page'); setTimeout(()=>document.getElementById('playgrounds').scrollIntoView({behavior:'smooth'}),100)" style="display:flex;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></span>
-    <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button class="theme-btn" onclick="toggleTheme()" aria-label="Alternar tema"><svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="4"/><line x1="12" y1="20" x2="12" y2="22"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="2" y1="12" x2="4" y2="12"/><line x1="20" y1="12" x2="22" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+      <button class="lang-btn" onclick="toggleLang()"><span class="lang-active">PT</span><span class="lang-sep">|</span><span class="lang-inactive">EN</span></button>
+    </div>
   </nav>
 
   <div class="project-hero">
@@ -3883,10 +3991,27 @@
     applyLang((window._currentLang || 'pt') === 'pt' ? 'en' : 'pt');
   }
 
+  function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    window._currentTheme = theme;
+  }
+
+  function toggleTheme() {
+    applyTheme((window._currentTheme || 'light') === 'light' ? 'dark' : 'light');
+  }
+
   (function() {
-    var saved = localStorage.getItem('lang') || 'pt';
-    window._currentLang = saved;
-    if (saved === 'en') { applyLang('en'); }
+    var savedLang = localStorage.getItem('lang') || 'pt';
+    window._currentLang = savedLang;
+    if (savedLang === 'en') { applyLang('en'); }
+
+    var savedTheme = localStorage.getItem('theme');
+    if (!savedTheme) {
+      savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    window._currentTheme = savedTheme;
+    // data-theme already applied by anti-flicker script in <head>
   })();
   </script>
 
